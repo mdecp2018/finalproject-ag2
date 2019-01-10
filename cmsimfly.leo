@@ -22,6 +22,20 @@
 <v t="leo.20180702145458.1"><vh>@button stop http.server</vh></v>
 </v>
 <v t="leo.20180703102027.1"><vh>@edit README.md</vh></v>
+<v t="leo.20190110195128.1"><vh>@auto ..\..\..\dick.py</vh>
+<v t="leo.20190110195128.2"><vh>Declarations (dick.py)</vh></v>
+<v t="leo.20190110195128.3"><vh>class Bunny</vh>
+<v t="leo.20190110195128.4"><vh>Bunny.__init__</vh></v>
+<v t="leo.20190110195128.5"><vh>Bunny.step</vh></v>
+<v t="leo.20190110195128.6"><vh>Bunny.mousedown</vh></v>
+<v t="leo.20190110195128.7"><vh>Bunny.mousemove</vh></v>
+<v t="leo.20190110195128.8"><vh>Bunny.mouseup</vh></v>
+</v>
+<v t="leo.20190110195128.9"><vh>class DemoApp</vh>
+<v t="leo.20190110195128.10"><vh>DemoApp.__init__</vh></v>
+<v t="leo.20190110195128.11"><vh>DemoApp.step</vh></v>
+</v>
+</v>
 <v t="amd.20160714225245.2" a="E"><vh>about cmsimfly</vh>
 <v t="amd.20160714230137.1"><vh>@edit .gitignore</vh></v>
 <v t="amd.20160714230155.1"><vh>@edit LICENSE</vh></v>
@@ -2485,6 +2499,170 @@ def downloads(path):
 
 
 # 與 file_selector 搭配的取檔程式
+</t>
+<t tx="leo.20190110195128.1"># Ggame
+from ggame import App, ImageAsset, Sprite, MouseEvent
+from random import random, randint
+from browser import document as doc
+from browser import html
+import math
+
+# 引入既有的id="graphics-column" 標註
+graphics_column = doc["graphics-column"]
+# 建立內定名稱為 "ggame-canvas" 的 canvas 標註
+canvas = html.CANVAS(width = 600, height = 400)
+canvas.id = "ggame-canvas"
+# 將 canvas 插入 gc 標註中
+graphics_column &lt;= canvas
+
+
+class Bunny(Sprite):
+    
+    asset = ImageAsset("/images/dickman.jpg")
+    
+    def __init__(self, position):
+        super().__init__(Bunny.asset, position)
+        # register mouse events
+        App.listenMouseEvent(MouseEvent.mousedown, self.mousedown)
+        App.listenMouseEvent(MouseEvent.mouseup, self.mouseup)
+        App.listenMouseEvent(MouseEvent.mousemove, self.mousemove)
+        self.dragging = True
+        self.deltax = 0
+        self.deltay = 0
+
+    
+    def step(self):
+        # Every now and then a bunny hops...
+        if random() &lt; 0.01:
+            self.x += randint(-20,20)
+            self.y += randint(-20,20)
+        
+        
+    def mousedown(self, event):
+        # capture any mouse down within 50 pixels
+        self.deltax = event.x - (self.x + self.width//2) 
+        self.deltay = event.y - (self.y + self.height//2)
+        if abs(self.deltax) &lt; 50 and abs(self.deltay) &lt; 50:
+            self.dragging = True
+            # only drag one bunny at a time - consume the event
+            event.consumed = True
+            
+    def mousemove(self, event):
+        if self.dragging:
+            self.x = event.x - self.deltax - self.width//2
+            self.y = event.y - self.deltay - self.height//2
+            event.consumed = True
+            
+    def mouseup(self, event):
+        if self.dragging:
+            self.dragging = False
+            event.consumed = True
+            
+        
+class DemoApp(App):
+    
+    def __init__(self):
+        super().__init__()
+        for i in range(5):
+            Bunny((randint(50, 600), randint(50, 400)))
+        
+    def step(self):
+        # Override step to perform action on each frame update
+        for bunny in self.spritelist:
+            bunny.step()
+
+
+# Create the app
+app = DemoApp()  
+# Run the app
+app.run()
+</t>
+<t tx="leo.20190110195128.10">def __init__(self):
+    super().__init__()
+    for i in range(5):
+        Bunny((randint(50, 600), randint(50, 400)))
+    
+</t>
+<t tx="leo.20190110195128.11">def step(self):
+    # Override step to perform action on each frame update
+    for bunny in self.spritelist:
+        bunny.step()
+
+
+\\-4.# Create the app
+</t>
+<t tx="leo.20190110195128.2">from ggame import App, ImageAsset, Sprite, MouseEvent
+from random import random, randint
+from browser import document as doc
+from browser import html
+import math
+
+# 引入既有的id="graphics-column" 標註
+graphics_column = doc["graphics-column"]
+# 建立內定名稱為 "ggame-canvas" 的 canvas 標註
+canvas = html.CANVAS(width = 600, height = 400)
+canvas.id = "ggame-canvas"
+# 將 canvas 插入 gc 標註中
+graphics_column &lt;= canvas
+
+
+</t>
+<t tx="leo.20190110195128.3">class Bunny(Sprite):
+    
+    asset = ImageAsset("/images/dickman.jpg")
+    
+    @others
+</t>
+<t tx="leo.20190110195128.4">def __init__(self, position):
+    super().__init__(Bunny.asset, position)
+    # register mouse events
+    App.listenMouseEvent(MouseEvent.mousedown, self.mousedown)
+    App.listenMouseEvent(MouseEvent.mouseup, self.mouseup)
+    App.listenMouseEvent(MouseEvent.mousemove, self.mousemove)
+    self.dragging = True
+    self.deltax = 0
+    self.deltay = 0
+
+
+</t>
+<t tx="leo.20190110195128.5">def step(self):
+    # Every now and then a bunny hops...
+    if random() &lt; 0.01:
+        self.x += randint(-20,20)
+        self.y += randint(-20,20)
+    
+    
+</t>
+<t tx="leo.20190110195128.6">def mousedown(self, event):
+    # capture any mouse down within 50 pixels
+    self.deltax = event.x - (self.x + self.width//2) 
+    self.deltay = event.y - (self.y + self.height//2)
+    if abs(self.deltax) &lt; 50 and abs(self.deltay) &lt; 50:
+        self.dragging = True
+        # only drag one bunny at a time - consume the event
+        event.consumed = True
+        
+</t>
+<t tx="leo.20190110195128.7">def mousemove(self, event):
+    if self.dragging:
+        self.x = event.x - self.deltax - self.width//2
+        self.y = event.y - self.deltay - self.height//2
+        event.consumed = True
+        
+</t>
+<t tx="leo.20190110195128.8">def mouseup(self, event):
+    if self.dragging:
+        self.dragging = False
+        event.consumed = True
+        
+    
+</t>
+<t tx="leo.20190110195128.9">class DemoApp(App):
+    
+    @others
+app = DemoApp()  
+# Run the app
+app.run()
 </t>
 </tnodes>
 </leo_file>
